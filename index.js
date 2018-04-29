@@ -27,5 +27,7 @@ app.get(
   })
 );
 
+app.get("/auth/google/callback", passport.authenticate("google")); // Byt kod med google profil
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
