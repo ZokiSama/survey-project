@@ -1,21 +1,31 @@
-const express = require('express');
-const passport = require('passport'); // Hur vi använder authensiering
-const GoogleStrategy = require('passport-google-oauth20').Strategy; // instruerar passport hur användare ska hanteras med google
-const keys = require('./config/keys'); // Path till nycklarnas
+const express = require("express");
+const passport = require("passport"); // Hur vi använder authensiering
+const GoogleStrategy = require("passport-google-oauth20").Strategy; // instruerar passport hur användare ska hanteras med google
+const keys = require("./config/keys"); // Path till nycklarnas
 
 const app = express();
 
-
-// Skapar en ny instans av GoogleStrategy
 passport.use(
-  new GoogleStrategy({
-    clientID: keys.googleClientID,// keys.js
-    clientSecret: keys.googleClientSecret,// keys.js
-    callbackURL: "/auth/google/callback" // Vägen användare kommer att skickas till efter de har godkänt info hos google
-  }, (accessToken) => {
-    console.log(accessToken);
+  new GoogleStrategy(
+    {
+      // Skapar en ny instans av GoogleStrategy
+      clientID: keys.googleClientID, // keys.js
+      clientSecret: keys.googleClientSecret, // keys.js
+      callbackURL: "/auth/google/callback" // Vägen användare kommer att skickas till efter de har godkänt info hos google
+    },
+    accessToken => {
+      console.log(accessToken);
+    }
+  )
+);
+
+// Route handler
+app.get(
+  "/auth/google", // När en användare kommer via denna URLen skicka vidare till passport
+  passport.authenticate("google", {
+    scope: ["profile", "email"]
   })
-); 
+);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
