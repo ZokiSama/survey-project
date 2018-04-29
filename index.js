@@ -13,8 +13,10 @@ passport.use(
       clientSecret: keys.googleClientSecret, // keys.js
       callbackURL: "/auth/google/callback" // Vägen användare kommer att skickas till efter de har godkänt info hos google
     },
-    accessToken => {
-      console.log(accessToken);
+    (accessToken, refreshToken, profile, done) => {
+      console.log('accessToken: ' + accessToken);
+      console.log('refreshToken: ' + refreshToken);
+      console.log('profile: ' + profile);
     }
   )
 );
