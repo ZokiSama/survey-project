@@ -1,6 +1,6 @@
 const passport = require('passport');
 
-module.export = app => {
+module.exports = app => {
   app.get(
     '/auth/google', // När en användare kommer via denna URLen skicka vidare till passport
     passport.authenticate('google', {
