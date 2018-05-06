@@ -14,11 +14,19 @@ passport.use(
       callbackURL: '/auth/google/callback' // Vägen användare kommer att skickas till efter de har godkänt info hos google
     },
     (accessToken, refreshToken, profile, done) => {
-      new User({
-        googleId: profile.id,
-        displayName: profile.displayName
-      }).save(); // Skapar en ny instans av en användare och sparar till MongoDB
-      console.log(profile);
+      User.findOne({ googleId: profile.id }).then(existingUser => {
+        if (existingUser) {
+          // Vi har redan en profil med det angivna ID
+          done(null, existingUser);
+        } else {
+          new User({
+            googleId: profile.id,
+            displayName: profile.displayName
+          })
+            .save()
+            .then(user => done(null, user)); // Skapar en ny instans av en användare och sparar till MongoDB
+        }
+      });
     }
   )
 );
