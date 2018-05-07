@@ -5,6 +5,16 @@ const keys = require('../config/keys'); // Path till nycklarna
 
 const User = mongoose.model('users'); // Få tillgång till User model class
 
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id).then(user => {
+    done(null, user);
+  });
+});
+
 passport.use(
   new GoogleStrategy(
     {
