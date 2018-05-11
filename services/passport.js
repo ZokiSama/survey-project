@@ -21,7 +21,8 @@ passport.use(
       // Skapar en ny instans av GoogleStrategy
       clientID: keys.googleClientID, // keys.js
       clientSecret: keys.googleClientSecret, // keys.js
-      callbackURL: '/auth/google/callback' // Vägen användare kommer att skickas till efter de har godkänt info hos google
+      callbackURL: '/auth/google/callback', // Vägen användare kommer att skickas till efter de har godkänt info hos google
+      proxy: true // Sidan hostas på hos Heroku så därför måste jag godkänna proxy för att gå via https
     },
     (accessToken, refreshToken, profile, done) => {
       User.findOne({ googleId: profile.id }).then(existingUser => {
