@@ -24,20 +24,19 @@ passport.use(
       callbackURL: '/auth/google/callback', // Vägen användare kommer att skickas till efter de har godkänt info hos google
       proxy: true // Sidan hostas på hos Heroku så därför måste jag godkänna proxy för att gå via https
     },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          // Vi har redan en profil med det angivna ID
-          done(null, existingUser);
-        } else {
-          new User({
-            googleId: profile.id,
-            displayName: profile.displayName
-          })
-            .save()
-            .then(user => done(null, user)); // Skapar en ny instans av en användare och sparar till MongoDB
-        }
-      });
+    async (accessToken, refreshToken, profile, done) => {
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if (existingUser) {
+        // Vi har redan en profil med det angivna ID
+        return done(null, existingUser);
+      }
+
+      const user = await new User({
+        googleId: profile.id,
+        displayName: profile.displayName
+      }).save();
+      done(null, user);
     }
   )
 );
