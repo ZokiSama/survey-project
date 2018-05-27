@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
-const keys = require('./config/keys.js');
-require('./models/User.js');
+const keys = require('./config/keys');
+require('./models/User');
 require('./models/Survey');
-require('./services/passport.js');
+require('./services/passport');
 
 mongoose.connect(keys.mongoURI);
 
