@@ -1,46 +1,57 @@
 // SurveyForm visar en from för en användare att skiva in data
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { Link } from 'react-router-dom';
 import SurveyField from './SurveyField';
+
+const FIELDS = [
+  {
+    label: 'Survey Title',
+    name: 'title',
+    noValueErr: 'Provide a Suvey Title'
+  },
+  {
+    label: 'Subject',
+    name: 'subject',
+    noValueErr: 'Provide a Subject'
+  },
+  {
+    label: 'E-Mail Body',
+    name: 'body',
+    noValueErr: 'Enter some text into body of survey'
+  },
+  {
+    label: 'E-Mail List',
+    name: 'emails',
+    noValueErr: 'Provide a list of E-Mails'
+  }
+];
 
 class SurveyForm extends Component {
   renderFields() {
-    return (
-      <div>
+    return _.map(FIELDS, ({ label, name }) => {
+      return (
         <Field
-          label="Survey Title"
-          type="text"
-          name="title"
+          key={name}
           component={SurveyField}
-        />
-        <Field
-          label="Subject Line"
           type="text"
-          name="subject"
-          component={SurveyField}
+          label={label}
+          name={name}
         />
-        <Field
-          label="E-Mail Body"
-          type="text"
-          name="body"
-          component={SurveyField}
-        />
-        <Field
-          label="E-Mail List"
-          type="text"
-          name="emails"
-          component={SurveyField}
-        />
-      </div>
-    );
+      );
+    });
   }
   render() {
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(values => console.log(values))}>
           {this.renderFields()}
-          <button className="btn waves-effect waves-light" type="submit">
-            Submit
+          <Link to="/surveys" className="red btn-flat white-text">
+            Cancel
+          </Link>
+          <button className="teal btn-flat right white-text" type="submit">
+            Review
             <i className="material-icons right">send</i>
           </button>
         </form>
@@ -49,6 +60,19 @@ class SurveyForm extends Component {
   }
 }
 
+function validate(values) {
+  const errors = {};
+
+  _.each(FIELDS, ({ name, noValueErr }) => {
+    if (!values[name]) {
+      errors[name] = noValueErr;
+    }
+  });
+
+  return errors;
+}
+
 export default reduxForm({
+  validate,
   form: 'surveyForm'
 })(SurveyForm);
