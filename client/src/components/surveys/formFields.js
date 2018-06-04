@@ -15,8 +15,8 @@ export default [
     noValueErr: 'Enter some text into body of survey'
   },
   {
-    label: 'E-Mail List',
-    name: 'emails',
+    label: 'Recipient List',
+    name: 'recipients',
     noValueErr: 'Provide a list of E-Mails'
   }
 ];
